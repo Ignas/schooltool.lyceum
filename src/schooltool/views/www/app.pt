@@ -1,0 +1,23 @@
+<schooltool xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns:tal="http://xml.zope.org/namespaces/tal">
+  <message>Welcome to the SchoolTool server</message>
+  <roots>
+    <root xlink:type="simple" tal:repeat="root view/getRoots"
+          tal:attributes="xlink:title root/title; xlink:href root/path"/>
+  </roots>
+  <containers>
+    <container xlink:type="simple" tal:repeat="container view/getContainers"
+               tal:attributes="xlink:title container/title;
+                               xlink:href container/path"/>
+  </containers>
+  <utilities>
+    <utility xlink:type="simple" tal:repeat="utility view/getUtilities"
+         tal:attributes="xlink:title utility/title; xlink:href utility/path"/>
+  </utilities>
+  <schooltt xlink:type="simple" xlink:title="Whole school timetables"
+            xlink:href="/schooltt"/>
+  <ttschemas xlink:type="simple" xlink:title="Timetable schemas"
+             xlink:href="/ttschemas"/>
+  <time-periods xlink:type="simple" xlink:title="Time periods"
+                xlink:href="/time-periods"/>
+</schooltool>
