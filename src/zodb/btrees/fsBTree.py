@@ -11,4 +11,4 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-from zodb.btrees._zodb_btrees_fsBTree import *
+from BTrees._fsBTree import *

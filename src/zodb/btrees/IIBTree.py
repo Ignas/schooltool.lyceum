@@ -11,4 +11,4 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-from zodb.btrees._zodb_btrees_IIBTree import *
+from BTrees.IIBTree import *

@@ -103,6 +103,8 @@ class PersistentFunction(Persistent):
     def __getattr__(self, attr):
         # If it wasn't found in __dict__, then it must be a function
         # attribute.
+        if attr == '_pf_func':
+            raise AttributeError, attr
         return getattr(self._pf_func, attr)
 
     def __setattr__(self, attr, value):
@@ -115,6 +117,8 @@ class PersistentFunction(Persistent):
                     self._v_side_effect = has_side_effect(self._pf_func)
             else:
                 setattr(self._pf_func, attr, value)
+            if not attr.startswith('_v_'):
+                self._p_changed = 1
 
     def __delattr__(self, attr):
         if not self._p_delattr(attr):
@@ -124,6 +128,8 @@ class PersistentFunction(Persistent):
                 del self.__dict__[attr]
             else:
                 delattr(self._pf_func, attr)
+            if not attr.startswith('_v_'):
+                self._p_changed = 1
 
     def __call__(self, *args, **kwargs):
         # We must make sure that _module is loaded when func is

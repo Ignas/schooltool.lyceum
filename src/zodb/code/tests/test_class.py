@@ -16,7 +16,7 @@ import unittest
 from zodb.code.tests.test_module import TestBase
 
 from transaction import get_transaction
-from persistence._persistence import CHANGED, UPTODATE
+from persistent.cPersistence import CHANGED, UPTODATE
 
 class TestClass(TestBase):
 

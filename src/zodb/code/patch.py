@@ -93,8 +93,6 @@ from types import *
 
 from zodb.code.class_ import PersistentClassMetaClass, PersistentDescriptor
 from zodb.code.function import PersistentFunction
-from persistence import PersistentMetaClass
-from pickle import REDUCE, BUILD
 
 class Wrapper:
     """Implement pickling reduce protocol for update-able object.
@@ -240,7 +238,7 @@ class Pickler(pickle.Pickler):
 
     dispatch[TypeType] = save_type
     dispatch[ClassType] = save_type
-    dispatch[PersistentMetaClass] = save_type
+    dispatch[type] = save_type
     dispatch[PersistentClassMetaClass] = save_type
 
     def save_function(self, func):
@@ -362,17 +360,16 @@ class Pickler(pickle.Pickler):
 
         save(callable)
         save(arg_tup)
-        write(REDUCE)
+        write(pickle.REDUCE)
 
         if obj is not None:
             memo_len = len(self.memo)
             self.write(self.put(memo_len))
             self.memo[id(obj)] = (memo_len, obj)
-            
 
         if state is not None:
             save(state)
-            write(BUILD)
+            write(pickle.BUILD)
 
 class Unpickler(pickle.Unpickler):
 

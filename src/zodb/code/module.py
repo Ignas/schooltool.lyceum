@@ -17,8 +17,8 @@ __metaclass__ = type
 
 from zope.interface import implements
 
-from persistence import Persistent
-from persistence._persistence import GHOST
+from persistent import Persistent
+from persistent.cPersistence import GHOST
 from zodb.code.interfaces import IPersistentModuleManager
 from zodb.code.interfaces \
      import IPersistentModuleImportRegistry, IPersistentModuleUpdateRegistry
@@ -208,8 +208,8 @@ class PersistentModuleImporter:
     circular import occurs.  The second import occurs when the
     machinery searches for the class of the registry.  It will re-use
     the registry and fail, because the registry will be marked as
-    changed but not yet have its stated loaded.  XXX There ought to be
-    a way to deal with this.
+    changed but not yet have its state loaded.
+    XXX There ought to be a way to deal with this.
     """
 
     # The import hook doesn't use sys.modules, because Zope might want
@@ -219,14 +219,17 @@ class PersistentModuleImporter:
     # sys.modules, because each registry could have a different binding
     # for a particular name.
 
-    def __init__(self):
-        self._saved_import = None
+    _saved_import = None
 
     def install(self):
+        if self._saved_import is not None:
+            raise TypeError("Already installed!")
         self._saved_import = __builtin__.__import__
         __builtin__.__import__ = self.__import__
 
     def uninstall(self):
+        if self._saved_import is None:
+            raise TypeError("Not installed!")
         __builtin__.__import__ = self._saved_import
 
     def _import(self, registry, name, parent, fromlist):
@@ -292,7 +295,7 @@ class PersistentModuleRegistry(Persistent):
         self._modules = {}
 
     def findModule(self, name):
-        assert self._p_state != GHOST
+        assert self._p_changed is not None
         return self._modules.get(name)
 
     def setModule(self, name, module):

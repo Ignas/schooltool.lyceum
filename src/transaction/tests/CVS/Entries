@@ -1,4 +1,5 @@
-/__init__.py/1.2/Mon Feb 24 17:42:36 2003//
-/test_txn.py/1.4/Mon Mar 31 07:20:03 2003//
-/abstestIDataManager.py/1.3/Wed May  7 10:29:24 2003//
+/__init__.py/1.2.64.2/Fri Jan 16 15:41:43 2004//Tzope3-zodb3-devel-branch
+/abstestIDataManager.py/1.3.44.3/Fri Jan 23 16:41:24 2004//Tzope3-zodb3-devel-branch
+/test_SampleDataManager.py/1.1.2.3/Tue Feb 17 18:00:48 2004//Tzope3-zodb3-devel-branch
+/test_util.py/1.1.2.2/Tue Feb 17 18:00:48 2004//Tzope3-zodb3-devel-branch
 D

@@ -13,15 +13,5 @@
 ##############################################################################
 """Provide access to Persistent C extension types."""
 
-from persistence._persistence import Persistent
-from persistence._persistence import PersistentMetaClass
-from persistence._persistence import simple_new
+from persistent import Persistent
 
-import copy_reg
-copy_reg.constructor(simple_new)
-
-# Make an interface declaration for Persistent
-from zope.interface import classImplements
-from persistence.interfaces import IPersistent
-
-classImplements(Persistent, IPersistent)

@@ -13,7 +13,7 @@
 ##############################################################################
 """A module used to test persistent module patching."""
 
-from zodb.utils import *
+from ZODB.utils import *
 
 def aFunc():
     def nestedFunc():
@@ -49,5 +49,5 @@ def anotherFunc():
 
 
 # import a module that won't be imported by something else:
-from zodb.code.tests import test_class
+from zodb.code.tests import tobeimportedbyatestmodule
 

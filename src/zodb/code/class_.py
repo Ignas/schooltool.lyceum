@@ -16,8 +16,7 @@
 __metaclass__ = type
 
 from zope.interface import implements
-from persistence import PersistentMetaClass
-from persistence._persistence import UPTODATE, CHANGED, GHOST
+from persistent.cPersistence import UPTODATE, CHANGED, GHOST
 from persistence.interfaces import IPersistent
 from zodb.code.function import PersistentFunction
 
@@ -214,7 +213,7 @@ class StateChangeDataDescr(ExtClassDataDescr):
     # A data descriptor for _p_changed.
     pass
 
-class PersistentClassMetaClass(PersistentMetaClass):
+class PersistentClassMetaClass(type):
 
     # An attempt to make persistent classes look just like other
     # persistent objects by providing class attributes and methods
@@ -263,7 +262,8 @@ class PersistentClassMetaClass(PersistentMetaClass):
         extend_attr("_p_state", state)
         extend_attr("_p_changed", None)
         extend_meth("_p_activate", meta._p_activate)
-        extend_meth("_p_deactivate", meta._p_activate)
+        extend_meth("_p_deactivate", meta._p_deactivate)
+        # XXX _p_invalidate
 
         # Create a descriptor that calls _p_activate() when _p_jar is set.
         inst_jar_descr = findattr(cls, "_p_jar", None)
@@ -295,7 +295,7 @@ class PersistentClassMetaClass(PersistentMetaClass):
         # like _p_state, since they may not be initialized.
         if not super_meth("_pc_init"):
             return super_meth(name)
-        if (name[0] == "_" and
+        if (name[0] != "_" or
             not (name.startswith("_p_") or name.startswith("_pc_") or
                  name == "__dict__")):
             if cls._p_state == GHOST:
@@ -383,7 +383,7 @@ class PersistentClassMetaClass(PersistentMetaClass):
                 try:
                     # XXX Make sure the object is in the cache before
                     # calling setstate().
-                    dm._cache.set(cls._p_oid, cls)
+                    dm._cache[cls._p_oid] = cls
                     dm.setstate(cls)
                 finally:
                     # XXX Should really put in special inconsistent state
@@ -419,12 +419,12 @@ class PersistentClassMetaClass(PersistentMetaClass):
         
         def getkeys(cls):
             L = [n for n in cls.__dict__.keys()
-                 if not (n.startswith("__") and n.endswith("__"))]
+                 if (not (n.startswith("__") and n.endswith("__"))
+                     and not n.startswith("_p_"))
+                 ]
             d = {}
             for elt in L:
                 d[elt] = True
-            del d["_p_oid"]
-            del d["_p_jar"]
             return d
         oldnames = getkeys(cls)
         newnames = getkeys(acls)

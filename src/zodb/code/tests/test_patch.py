@@ -31,12 +31,19 @@ class TestNameFinder(unittest.TestCase):
 
 class TestPatch(unittest.TestCase):
 
+    def setUp(self):
+        self.olddict = atestmodule.__dict__.copy()
+
+    def tearDown(self):
+        atestmodule.__dict__.clear()
+        atestmodule.__dict__.update(self.olddict)
+
     def testPatch(self):
         # verify obvious facts of object identity
         self.assert_(atestmodule.Bar is atestmodule.Sub.__bases__[0])
         self.assert_(atestmodule.aFunc is atestmodule.foo[0])
 
-        moddict = atestmodule.__dict__
+        moddict = self.olddict
         convert(atestmodule, {})
         newdict = atestmodule.__dict__
 
@@ -57,9 +64,9 @@ class TestPatch(unittest.TestCase):
 
         # The patch should not touch modules, functions, etc. that
         # are imported from other modules.
-        import zodb.utils
-        for name in dir(zodb.utils):
-            obj = getattr(zodb.utils, name)
+        import ZODB.utils
+        for name in dir(ZODB.utils):
+            obj = getattr(ZODB.utils, name)
             if isinstance(obj, type) or isinstance(obj, function):
                 self.assert_(obj is newdict[name])
 

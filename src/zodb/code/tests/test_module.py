@@ -16,11 +16,10 @@ import pickle
 import unittest
 
 from persistence.dict import PersistentDict
-from persistence._persistence import UPTODATE
+from persistent import UPTODATE
 from transaction import get_transaction
 
-import zodb.db
-from zodb.storage.mapping import MappingStorage
+import ZODB.tests.util
 from zodb.code import tests # import this package, to get at __file__ reliably
 from zodb.code.module \
      import ManagedRegistry, PersistentModuleImporter, PersistentPackage
@@ -87,7 +86,7 @@ class TestPersistentModuleImporter(PersistentModuleImporter):
 class TestBase(unittest.TestCase):
 
     def setUp(self):
-        self.db = zodb.db.DB(MappingStorage())
+        self.db = ZODB.tests.util.DB()
         self.root = self.db.open().root()
         self.registry = ManagedRegistry()
         self.importer = TestPersistentModuleImporter(self.registry)
@@ -101,6 +100,7 @@ class TestBase(unittest.TestCase):
         self.importer.uninstall()
         # just in case
         get_transaction().abort()
+        self.db.close()
 
     def sameModules(self, registry):
         m1 = self.registry.modules()
@@ -358,17 +358,17 @@ class TestModuleReload(unittest.TestCase):
     """Test reloading of modules"""
 
     def setUp(self):
-        self.storage = MappingStorage()
+        self.db = ZODB.tests.util.DB()
         self.open()
         _dir, _file = os.path.split(tests.__file__)
         self._pmtest = os.path.join(_dir, "_pmtest.py")
 
     def tearDown(self):
         get_transaction().abort()
+        self.db.close()
 
     def open(self):
         # open a new db and importer from the storage
-        self.db = zodb.db.DB(self.storage)
         self.root = self.db.open().root()
         self.registry = self.root.get("registry")
         if self.registry is None:
@@ -379,7 +379,7 @@ class TestModuleReload(unittest.TestCase):
 
     def close(self):
         self.importer.uninstall()
-        self.db.close()
+        self.root._p_jar.close()
 
     def testModuleReload(self):
         self.registry.newModule("pmtest", open(self._pmtest).read())
