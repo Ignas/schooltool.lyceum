@@ -1,0 +1,13 @@
+<absences xmlns:tal="http://xml.zope.org/namespaces/tal"
+          xmlns:xlink="http://www.w3.org/1999/xlink">
+  <absence tal:repeat="item view/listAbsences"
+           xlink:type="simple"
+           tal:attributes="xlink:title item/title;
+                           xlink:href item/href;
+                           person_title item/person_title;
+                           datetime item/datetime;
+                           expected_presence item/expected_presence;
+                           ended item/ended;
+                           resolved item/resolved"
+           tal:content="item/last_comment" />
+</absences>
