@@ -1,0 +1,58 @@
+<html metal:use-macro="view/@@standard_macros/page" i18n:domain="schooltool.lyceum.journal">
+<head>
+  <title metal:fill-slot="title"
+         i18n:translate="">
+    <tal:block i18n:name="person" tal:replace="view/context/title" /> journal  for
+    <tal:block i18n:name="month" tal:replace="python: view.monthTitle(view.active_month)" /></title>
+
+  <title  i18n:translate=""
+    ><span i18n:name="person" tal:replace="view/context/title"/> journal</title>
+</head>
+
+<metal:block metal:fill-slot="content-header">
+    <h1 i18n:translate=""><tal:block
+      i18n:name="student_name"
+      tal:replace="view/context/title" /> journal  for <tal:block i18n:name="month" tal:replace="python: view.monthTitle(view.active_month)" /></h1>
+</metal:block>
+
+<metal:block metal:fill-slot="body">
+  <form action="." method="post" tal:attributes="action request/URL">
+    <div class="controls">
+      <select name="TERM">
+        <option tal:repeat="term view/scheduled_terms"
+                tal:content="term/title"
+                tal:attributes="value term/__name__;
+                                selected python:term is view.getSelectedTerm()" />
+      </select>
+      <input type="submit" class="button-ok" name="UPDATE_SUBMIT" value="Select"
+             title="Shortcut: Alt-S" accesskey="S"
+             i18n:attributes="value select-button;accesskey schortcut-letter-for-select;title title-for-select-button" />
+    </div>
+
+    <input tal:condition="request/month|nothing"
+           type="hidden"
+           name="month"
+           tal:attributes="value request/month" />
+    <input tal:condition="request/event_id|nothing"
+           type="hidden"
+           name="event_id"
+           tal:attributes="value request/event_id" />
+
+    <div>
+      <span tal:repeat="month_id view/monthsInSelectedTerm">
+        <tal:if condition="python: month_id != view.active_month">
+          <a tal:attributes="href python: view.monthURL(month_id)"
+             tal:content="python: view.monthTitle(month_id)" />
+        </tal:if>
+        <tal:if condition="python: month_id == view.active_month">
+          <tal:block tal:replace="python: view.monthTitle(month_id)" />
+        </tal:if>
+      </span>
+    </div>
+
+    <div class="gradebook">
+      <tal:block replace="structure view/gradebook/render" />
+    </div>
+  </form>
+</metal:block>
+</html>
