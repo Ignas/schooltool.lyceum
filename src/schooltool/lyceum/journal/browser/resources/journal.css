@@ -1,0 +1,84 @@
+/* styles for the gradebook */
+
+.gradebook TABLE {
+    border-top: solid 1px #bbb;
+    border-bottom: solid 1px #bbb;
+}
+
+.gradebook TABLE.data {
+    border-spacing: 0px;
+}
+
+.gradebook TABLE.data TD
+{
+    border-left: 1px solid #BBB;
+}
+
+.gradebook TD span.today {
+    background-color: #EAFAE3;
+}
+
+.gradebook TABLE.data TD.selected-column
+{
+    border-left: 1px dashed #000;
+    border-right: 1px dashed #000;
+}
+
+.gradebook TABLE.data TD.selected-cell
+{
+    border: solid 1px #000;
+}
+
+.gradebook TABLE.data TD.selected-row
+{
+    border-top: 1px dashed #000;
+    border-bottom: 1px dashed #000;
+}
+
+div.gradebook_content {
+    float: left;
+}
+
+.gradebook_content div.month_tabs {
+    padding-top: 1ex;
+    padding-bottom: .5ex;
+}
+
+.gradebook_content span.active_tab {
+    border-left: solid 1px #bbb;
+    border-top: solid 1px #bbb;
+    border-bottom: solid 1px #bbb;
+    padding: .5ex;
+    background-color: #eee;
+    width: 90px;
+    text-align: center;
+}
+
+.gradebook_content span.inactive_tab {
+    border-left: solid 1px #bbb;
+    border-top: solid 1px #bbb;
+    border-bottom: solid 1px #bbb;
+    padding: .5ex;
+    background-color: #ddd;
+    width: 90px;
+    text-align: center;
+}
+
+.gradebook_content span.term_tab {
+    border-right: solid 1px #bbb;
+}
+
+.gradebook table th {
+    border-left: 1px solid #BBB;
+    background: #ddd;
+}
+
+
+/* overrides colors in schooltool.css to match other gradebooks */
+.gradebook_content tr.odd {
+    background-color: #eee;
+}
+
+.gradebook_content tr.even {
+    background-color: #ddd;
+}
